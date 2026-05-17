@@ -21,9 +21,9 @@ def load_config():
     
     if not os.path.exists(config_path):
         default_config = {
-            "drobi": [[5, "+"], [5, "-"]],
-            "power": [[5, "^"], [5, "root"]],
-            "linear": [[5, "+"], [5, "-"]]
+            "drobi": [[10, "+"], [10, "-"]],
+            "power": [[10, "^"], [10, "root"]],
+            "linear": [[10, "+"], [10, "-"]]
         }
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(default_config, f, ensure_ascii=False, indent=2)
