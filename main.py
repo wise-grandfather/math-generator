@@ -64,7 +64,7 @@ def create_page_pair(doc, examples_batch, answers_batch, rows, cols,
     table2 = create_table(doc, rows, cols, cell_width_cm, cell_height_cm)
     fill_table_reversed_cols(table2, answers_batch, font_size, bold=True)
     
-    #doc.add_page_break()
+    doc.add_page_break()
 
 def create_math_document(config, output_file,
                          rows=8, cols=4,
@@ -129,6 +129,15 @@ if __name__ == "__main__":
     filename = filename_input if filename_input else default_name
     output_path = os.path.join(base_dir, filename)
     
+    output_path = os.path.join(base_dir, filename)
+    name, ext = os.path.splitext(filename)
+    index = 1
+
+    while os.path.exists(output_path):
+        new_name = f"{name}{index}{ext}"
+        output_path = os.path.join(base_dir, new_name)
+        index += 1
+
     create_math_document(
         config=config,
         output_file=output_path,

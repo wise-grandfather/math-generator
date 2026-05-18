@@ -65,7 +65,7 @@ def create_table(doc, rows, cols, cell_width_cm, cell_height_cm):
 
 
 def calculate_font_size(cell_width_cm, cell_height_cm):
-    font_size = int(12 * (cell_width_cm / 4.0) * (cell_height_cm / 3.0))
+    font_size = int(16 * (cell_width_cm / 4.0) * (cell_height_cm / 3.0))
     return Pt(max(9, min(font_size, 20)))
 
 

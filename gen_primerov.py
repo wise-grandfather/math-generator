@@ -24,9 +24,9 @@ def drobi(n: int, sign: str):
 
     while len(examples_drobi) < n:
         a = randint(1,9)
-        b = randint(2,9)
+        b = choice([i for i in range(2, 10) if a % i != 0])
         c = randint(1,9)
-        d = randint(2,9)
+        d = choice([i for i in range(2, 10) if c % i != 0])
 
         fr1 = Fraction(a, b)
         fr2 = Fraction(c, d)
@@ -34,7 +34,7 @@ def drobi(n: int, sign: str):
         example: str = f"{fr1} {sign} {fr2}"
         result: float = ops[sign](fr1, fr2)
 
-        if example not in examples_drobi:
+        if example not in examples_drobi and fr1 != fr2:
             examples_drobi[example] = result
 
     return examples_drobi
@@ -43,26 +43,27 @@ def power(n: int, sign: str):
     examples_powers = {}
 
     while len(examples_powers) < n:
-        a = randint(-9, 9)
-        b = randint(2,4)
-
         example: str = ''
 
         if sign == 'root':
-            valid = [i for i in range(-9, 10) if i not in (-1, 0, 1)]
-            a = choice(valid)
-            underRoot = a ** b
-
-            if b == 2:
-                example = f"√{underRoot}"
-            elif b == 3:
+            b = randint(2, 4)
+    
+            if b == 3:
+                valid = [i for i in range(-9, 10) if i not in (-1, 0, 1)]
+                a = choice(valid)
+                underRoot = a ** b
+                result = a
                 example = f"³√{underRoot}"
             else:
-                example = f"⁴√{underRoot}"
-            
-            result = a
-
+                valid = [i for i in range(2, 10)]
+                a = choice(valid)
+                underRoot = a ** b
+                result = a 
+                example = f"√{underRoot}" if b == 2 else f"⁴√{underRoot}"
+        
         elif sign == '^':
+            a = randint(-9, 9)
+            b = randint(2,4)
             example = f"{a}^{b}"
             result = ops[sign](a, b)
 
@@ -79,7 +80,7 @@ def linearFuncs(n: int, sign: str):
         F = linearFnTemplates[T]
 
         a = randint(1,9)
-        b = randint(1,9)
+        b = choice([i for i in range(1, 9) if i != a])
         x = randint(-10, 10)
         c = F(a, b, x, sign)
 
@@ -97,7 +98,7 @@ GENERATORS = {
     'linear': linearFuncs
 }
 
-def get_examples(config): #config = {drobi: [[10, '-'], [10, '+']], power: [[10, '^'], [10, 'root']], linear: [[10, '-'], [10, '+']]}
+def get_examples(config):
     result = {}
     
     for gen_name, tasks in config.items():
