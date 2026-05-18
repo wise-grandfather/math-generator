@@ -11,14 +11,6 @@ ops = {
     'root': lambda a, b: a ** (1 / b)
 }
 
-linearFnTemplates = {
-    "{a}x {sign} {b} = {c}": lambda a, b, x, sign: ops[sign](a*x, b),
-    "{b} {sign} {a}x = {c}": lambda a, b, x, sign: ops[sign](b, a*x),
-    "{a}x {sign} {b}x = {c}": lambda a, b, x, sign: ops[sign](a*x, b*x),
-    "({a} {sign} x)·{b} = {c}": lambda a, b, x, sign: ops[sign](a, x) * b,
-    "{b}·({a} {sign} x) = {c}": lambda a, b, x, sign: ops[sign](a, x) * b,
-}
-
 def drobi(n: int, sign: str):
     examples_drobi = {}
 
@@ -38,6 +30,7 @@ def drobi(n: int, sign: str):
             examples_drobi[example] = result
 
     return examples_drobi
+
 
 def power(n: int, sign: str):
     examples_powers = {}
@@ -72,6 +65,57 @@ def power(n: int, sign: str):
 
     return examples_powers
 
+def powerOperation(n: int, sign: str):
+    examples = {}
+    
+    while len(examples) < n:
+        a = randint(1, 9)
+        d = choice([a, a*2, a*3])
+        b = randint(-10, 10)
+        c = randint(-10, 10)
+
+        example = f"{a}^{b} {sign} {d}^{c}"
+        result = ops[sign](a**b, d**c)
+
+        if example not in examples:
+            examples[example] = result
+
+    return examples
+
+
+skobkiTemplates = {
+    "{a}(x {sign} {b})": lambda a, b, sign: f"{a}x {sign} {b*a}",
+    "{a}({b} {sign} x)": lambda a, b, sign: f"{b*a} {sign} {a}x",
+    "({a} {sign} x){b}": lambda a, b, sign: f"{b*a} {sign} {b}x",
+    "(x {sign} {a}){b}": lambda a, b, sign: f"{b}x {sign} {b*a}"
+}
+
+def skobki(n: int, sign: str):
+    examples = {}
+
+    while len(examples) < n:
+        T = choice(list(skobkiTemplates.keys()))
+        F = skobkiTemplates[T]
+
+        a = randint(-10, 10)
+        b = randint(-10, 10)
+
+        example = T.format(a=a, b=b, sign=sign)
+        if example not in examples:
+            examples[example] = F(a, b, sign)
+
+    return examples
+
+
+
+linearFnTemplates = {
+    "{a}x {sign} {b} = {c}": lambda a, b, x, sign: ops[sign](a*x, b),
+    "{b} {sign} {a}x = {c}": lambda a, b, x, sign: ops[sign](b, a*x),
+    "{a}x {sign} {b}x = {c}": lambda a, b, x, sign: ops[sign](a*x, b*x),
+    "({a} {sign} x)·{b} = {c}": lambda a, b, x, sign: ops[sign](a, x) * b,
+    "{b}·({a} {sign} x) = {c}": lambda a, b, x, sign: ops[sign](a, x) * b,
+}
+
 def linearFuncs(n: int, sign: str):
     examples = {}
 
@@ -95,6 +139,8 @@ def linearFuncs(n: int, sign: str):
 GENERATORS = {
     'drobi': drobi,
     'power': power,
+    'powerOp': powerOperation,
+    'skobki': skobki,
     'linear': linearFuncs
 }
 
